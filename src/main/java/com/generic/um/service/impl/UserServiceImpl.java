@@ -1,5 +1,6 @@
 package com.generic.um.service.impl;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -40,32 +41,32 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 		super.setCrudRepository(dao);
 	}
 
-	
+	@Override
 	public User findByUserName(String username) {
 		return dao.findUserByUserName(username);
 	}
 
-	
+	@Override
 	public Boolean isUsernameExists(String userName) {
 		return dao.isUsernameExists(userName);
 	}
 
-	
+	@Override
 	public User findUserByUserName(String userName) {
 		return dao.findUserByUserName(userName);
 	}
 
-	
+	@Override
 	public User findUserByUserNameAndType(String userName, String userType) {
 		return dao.findUserByUserNameAndType(userName, userType);
 	}
 
-	
+	@Override
 	public List<User> getBirthdayUserList() {
 		return dao.getBirthdayUserList();
 	}
 
-	
+	@Override
 	public UserWrapper verifyAndCreateSocialMediaUser(UserWrapper userWrapper) {
 		if (UserType.GOOGLE.name().equalsIgnoreCase(userWrapper.getUserType())) {
 		    handleGoogleUser(userWrapper);
@@ -73,7 +74,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 		return userWrapper;
 	}
 
-	
+	@Override
 	public UserWrapper isValidUser(User user) {
 		user.setPassword(pwEncoder.encode(user.getPassword()));
 		User userFromDB = dao.isValidUser(user.getUserName(), user.getPassword());
@@ -89,21 +90,18 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 		}
 	}
 
-	
+	@Override
 	public String updatePasswordByOTPVerification(String emailId, String otp, String password) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
+	@Override
 	public String forgotPassword(User user) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
+	@Override
 	public User verifyOTPAndCreateUser(User entity, String otp, String email) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -151,6 +149,19 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 		userWrapper.setToken(tokenHelper.generateToken(user));
 		userWrapper.setRole(user.getRole().name());
 
+	}
+
+
+	public void changeAdminStatus(Integer userId, Boolean flag) {
+		User user = dao.findById(userId).get();
+		user.setRole(flag ? UserRole.ROLE_ADMIN : UserRole.ROLE_USER);
+		dao.save(user);
+	}
+
+
+	public void uploadProfilePic(InputStream file, String fileName) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

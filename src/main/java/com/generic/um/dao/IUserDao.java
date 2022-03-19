@@ -16,7 +16,7 @@ public interface IUserDao extends CrudRepository<User, Integer>{
 	
 	public List<User> findByLastName(String lastName);
 	
-	@Query("select u from User u where u.userName = :userName and u.password = :passWord")
+	@Query("select u from User u where u.userName = :userName and u.passWord = :passWord")
 	public User isValidUser(@Param("userName")String userName,@Param("passWord")String passWord);
 
 	@Query("select new java.lang.Boolean(count(*) > 0) from User u  where u.userName = :userName ")

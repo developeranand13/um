@@ -1,5 +1,6 @@
 package com.generic.um.service;
 
+import java.io.InputStream;
 import java.util.List;
 
 import com.generic.core.model.User;
@@ -18,14 +19,21 @@ public interface IUserService extends IGenericService<User, Integer> {
 	
 	public List<User> getBirthdayUserList();
 
-	UserWrapper verifyAndCreateSocialMediaUser(UserWrapper user);
+	public UserWrapper verifyAndCreateSocialMediaUser(UserWrapper user);
 
-	UserWrapper isValidUser(User user);
+	public UserWrapper isValidUser(User user);
 
-	String updatePasswordByOTPVerification(String emailId, String otp, String password);
+	public String updatePasswordByOTPVerification(String emailId, String otp, String password);
 
-	String forgotPassword(User user);
+	public String forgotPassword(User user);
 
-	User verifyOTPAndCreateUser(User entity, String otp, String email);
+	public User verifyOTPAndCreateUser(User entity, String otp, String email);
+	
+	public void changeAdminStatus(Integer userId, Boolean flag);
+
+	public void uploadProfilePic(InputStream file, String fileName) ;
+
+
+
 
 }
