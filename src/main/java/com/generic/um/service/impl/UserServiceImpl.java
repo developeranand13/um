@@ -1,6 +1,7 @@
 package com.generic.um.service.impl;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.generic.core.constants.IGenericConstants;
 import com.generic.core.exception.BusinessException;
 import com.generic.core.model.User;
 import com.generic.core.model.User.UserRole;
@@ -18,12 +20,13 @@ import com.generic.core.service.impl.GenericServiceImpl;
 import com.generic.core.utils.AESEncryptor;
 import com.generic.core.wrapper.UserWrapper;
 import com.generic.um.dao.IUserDao;
+import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
 
 import ch.qos.logback.classic.Logger;
 
 @Service
-public class UserServiceImpl extends GenericServiceImpl<User, Integer> implements IUserService {
+public class UserServiceImpl extends GenericServiceImpl<User, Integer> implements IUserService,IGenericConstants {
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -35,6 +38,9 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	
 	@Autowired
 	TokenHelper tokenHelper;
+	
+	@Autowired
+	IOtpRestConsumer otpRestConsumer;
 
 	@PostConstruct
 	public void setService() {
@@ -92,7 +98,15 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public String updatePasswordByOTPVerification(String emailId, String otp, String password) {
-		return null;
+		if (otpRestConsumer.verifyOtp(emailId, otp)) {
+		    User user = dao.findUserByUserName(emailId);
+		    user.setPassword(pwEncoder.encode(password));
+		    user.setModificationTime(new Date());
+		    dao.save(user);
+		} else {
+		    throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+		}
+		return SUCCESS_JSON;
 	}
 
 	@Override
@@ -102,7 +116,11 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public User verifyOTPAndCreateUser(User entity, String otp, String email) {
-		return null;
+		if (otpRestConsumer.verifyOtp(email, otp)) {
+		    return insert(entity);
+		} else {
+		    throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+		}
 	}
 	
 	

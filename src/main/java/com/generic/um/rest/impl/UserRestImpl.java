@@ -14,18 +14,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.generic.core.model.User;
 import com.generic.core.rest.impl.GenericRestImpl;
 import com.generic.core.wrapper.UserWrapper;
+import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
 
 import ch.qos.logback.classic.Logger;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/unauth/user")
 public class UserRestImpl extends GenericRestImpl<User, Integer> {
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(UserRestImpl.class);
 	
 	@Autowired
 	IUserService service;
+	
+	@Autowired
+	IOtpRestConsumer otpRestConsumer;
 	
 	@PostConstruct
 	public void setService(){
@@ -69,6 +73,11 @@ public class UserRestImpl extends GenericRestImpl<User, Integer> {
 	public UserWrapper verifyAndCreateSocialMediaUser(@RequestBody UserWrapper user) {
 		logger.info("Going inside verifyAndCreateSocialMediaUser for :{}" , user.getUserName());
 		return service.verifyAndCreateSocialMediaUser(user);
+	}
+	
+	@GetMapping("/getMessage")
+	public String getMessage(){
+		return otpRestConsumer.getMessage();
 	}
 	
 	
