@@ -105,7 +105,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public String updatePasswordByOTPVerification(String emailId, String otp, String password) {
-		if (otpRestConsumer.verifyOtp(emailId, otp)) {
+		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(), emailId, otp)) {
 			User user = dao.findUserByUserName(emailId);
 			user.setPassword(pwEncoder.encode(password));
 			user.setModificationTime(new Date());
@@ -123,7 +123,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public User verifyOTPAndCreateUser(User entity, String otp, String email) {
-		if (otpRestConsumer.verifyOtp(email, otp)) {
+		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(),email, otp)) {
 			return insert(entity);
 		} else {
 			throw new BusinessException("OTP Verification failed", "OTP Verification failed");

@@ -2,7 +2,6 @@ package com.generic.um.rest.impl;
 
 import java.util.Map;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,18 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.generic.core.constants.IGenericConstants;
+import com.generic.core.logger.GenericLogger;
 import com.generic.core.model.User;
 import com.generic.core.wrapper.UserWrapper;
 import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
 
-import ch.qos.logback.classic.Logger;
-
 @RestController
 @RequestMapping("/unauth/user")
 public class UserRestImpl  {
 	
-	private static final Logger logger = (Logger) LoggerFactory.getLogger(UserRestImpl.class);
+	private static final GenericLogger logger = new GenericLogger(UserRestImpl.class);
 	
 	@Autowired
 	IUserService service;
@@ -60,7 +58,7 @@ public class UserRestImpl  {
 	
 	@PostMapping("/isvaliduser")
 	public UserWrapper isValidUser(@RequestBody User user) {
-		logger.info("Going to check user validity new {} " , user.getUserName());
+		logger.info("Going to check user validity new  " + user.getUserName());
 		return service.isValidUser(user);
 	}
 	
@@ -68,14 +66,14 @@ public class UserRestImpl  {
 	
 	@PostMapping("/verifyAndCreateSocialMediaUser")
 	public UserWrapper verifyAndCreateSocialMediaUser(@RequestBody UserWrapper user) {
-		logger.info("Going inside verifyAndCreateSocialMediaUser for :{}" , user.getUserName());
+		logger.info("Going inside verifyAndCreateSocialMediaUser for :" + user.getUserName());
 		return service.verifyAndCreateSocialMediaUser(user);
 	}
 	
 	@GetMapping("/getMessage")
 	public String getMessage(@RequestHeader Map<String,Object> headers){
-//		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
-		return otpRestConsumer.getMessage();
+		logger.info("Inside getMessage");
+		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
 	}
 	
 	@PostMapping("/create")
