@@ -1,14 +1,18 @@
 package com.generic.um.rest.impl;
 
+import java.util.Map;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.generic.core.constants.IGenericConstants;
 import com.generic.core.model.User;
 import com.generic.core.wrapper.UserWrapper;
 import com.generic.um.restconsumer.IOtpRestConsumer;
@@ -69,12 +73,13 @@ public class UserRestImpl  {
 	}
 	
 	@GetMapping("/getMessage")
-	public String getMessage(){
+	public String getMessage(@RequestHeader Map<String,Object> headers){
+//		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
 		return otpRestConsumer.getMessage();
 	}
 	
 	@PostMapping("/create")
-	public User insert(@RequestBody User entity)  {
+	public User insert( @RequestBody User entity)  {
 			return service.insert(entity);
 	}
 	
