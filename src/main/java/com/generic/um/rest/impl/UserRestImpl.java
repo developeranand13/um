@@ -1,7 +1,5 @@
 package com.generic.um.rest.impl;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.generic.core.model.User;
-import com.generic.core.rest.impl.GenericRestImpl;
 import com.generic.core.wrapper.UserWrapper;
 import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
@@ -21,7 +18,7 @@ import ch.qos.logback.classic.Logger;
 
 @RestController
 @RequestMapping("/unauth/user")
-public class UserRestImpl extends GenericRestImpl<User, Integer> {
+public class UserRestImpl  {
 	
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(UserRestImpl.class);
 	
@@ -31,10 +28,6 @@ public class UserRestImpl extends GenericRestImpl<User, Integer> {
 	@Autowired
 	IOtpRestConsumer otpRestConsumer;
 	
-	@PostConstruct
-	public void setService(){
-		super.setService(service);
-	}
 	
 	@PostMapping("/verifyOTPAndCreateUser/{otp}/{email}")
 	public User verifyOTPAndCreateUser(User entity,@PathVariable("otp") String otp,@PathVariable("email") String email)  {
@@ -78,6 +71,11 @@ public class UserRestImpl extends GenericRestImpl<User, Integer> {
 	@GetMapping("/getMessage")
 	public String getMessage(){
 		return otpRestConsumer.getMessage();
+	}
+	
+	@PostMapping("/create")
+	public User insert(@RequestBody User entity)  {
+			return service.insert(entity);
 	}
 	
 	

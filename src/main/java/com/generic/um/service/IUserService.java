@@ -33,6 +33,12 @@ public interface IUserService extends IGenericService<User, Integer> {
 
 	public void uploadProfilePic(InputStream file, String fileName) ;
 
+	String logout();
+
+	void enableUser(Integer userId, Boolean flag);
+
+	User getUserInContext();
+
 
 
 

@@ -18,6 +18,7 @@ import com.generic.core.model.User.UserType;
 import com.generic.core.security.TokenHelper;
 import com.generic.core.service.impl.GenericServiceImpl;
 import com.generic.core.utils.AESEncryptor;
+import com.generic.core.utils.AppDataHolder;
 import com.generic.core.wrapper.UserWrapper;
 import com.generic.um.dao.IUserDao;
 import com.generic.um.restconsumer.IOtpRestConsumer;
@@ -26,8 +27,8 @@ import com.generic.um.service.IUserService;
 import ch.qos.logback.classic.Logger;
 
 @Service
-public class UserServiceImpl extends GenericServiceImpl<User, Integer> implements IUserService,IGenericConstants {
-	
+public class UserServiceImpl extends GenericServiceImpl<User, Integer> implements IUserService, IGenericConstants {
+
 	private static final Logger logger = (Logger) LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Autowired
@@ -35,10 +36,10 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Autowired
 	AESEncryptor pwEncoder;
-	
+
 	@Autowired
 	TokenHelper tokenHelper;
-	
+
 	@Autowired
 	IOtpRestConsumer otpRestConsumer;
 
@@ -71,11 +72,17 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	public List<User> getBirthdayUserList() {
 		return dao.getBirthdayUserList();
 	}
+	
+	@Override
+	public User insert(User entity) {
+		entity.setPassword(pwEncoder.encode(entity.getPassword()));
+		return super.insert(entity);
+	}
 
 	@Override
 	public UserWrapper verifyAndCreateSocialMediaUser(UserWrapper userWrapper) {
 		if (UserType.GOOGLE.name().equalsIgnoreCase(userWrapper.getUserType())) {
-		    handleGoogleUser(userWrapper);
+			handleGoogleUser(userWrapper);
 		}
 		return userWrapper;
 	}
@@ -99,12 +106,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	@Override
 	public String updatePasswordByOTPVerification(String emailId, String otp, String password) {
 		if (otpRestConsumer.verifyOtp(emailId, otp)) {
-		    User user = dao.findUserByUserName(emailId);
-		    user.setPassword(pwEncoder.encode(password));
-		    user.setModificationTime(new Date());
-		    dao.save(user);
+			User user = dao.findUserByUserName(emailId);
+			user.setPassword(pwEncoder.encode(password));
+			user.setModificationTime(new Date());
+			dao.save(user);
 		} else {
-		    throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
 		}
 		return SUCCESS_JSON;
 	}
@@ -117,13 +124,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	@Override
 	public User verifyOTPAndCreateUser(User entity, String otp, String email) {
 		if (otpRestConsumer.verifyOtp(email, otp)) {
-		    return insert(entity);
+			return insert(entity);
 		} else {
-		    throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
 		}
 	}
-	
-	
+
 	private UserWrapper getUserWrapperFromUser(User userFromDB) {
 		UserWrapper wrapper = new UserWrapper();
 		wrapper.setUserName(userFromDB.getUserName());
@@ -131,7 +137,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 		wrapper.setId(userFromDB.getId());
 		wrapper.setEmailId(userFromDB.getEmailId());
 		wrapper.setEnabled(userFromDB.getEnabled());
-		wrapper.setName(userFromDB.getFirstName() +" "+userFromDB.getLastName());
+		wrapper.setName(userFromDB.getFirstName() + " " + userFromDB.getLastName());
 		wrapper.setToken(tokenHelper.generateToken(userFromDB));
 		wrapper.setUserType(userFromDB.getUserType().name());
 		wrapper.setRole(userFromDB.getRole().name());
@@ -140,7 +146,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 		wrapper.setProfilePicPath(userFromDB.getProfilePicPath());
 		return wrapper;
 	}
-	
+
 	private void handleGoogleUser(UserWrapper userWrapper) {
 		User user = dao.findUserByUserNameAndType(userWrapper.getUserName(), userWrapper.getUserType());
 		if (user == null) {
@@ -169,17 +175,36 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	}
 
-
 	public void changeAdminStatus(Integer userId, Boolean flag) {
 		User user = dao.findById(userId).get();
 		user.setRole(flag ? UserRole.ROLE_ADMIN : UserRole.ROLE_USER);
 		dao.save(user);
 	}
 
-
 	public void uploadProfilePic(InputStream file, String fileName) {
-		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public String logout() {
+		User user = getUserInContext();
+		user.setLoginStatus(false);
+		dao.save(user);
+		return SUCCESS_JSON;
+	}
+
+	@Override
+	public void enableUser(Integer userId, Boolean flag) {
+		User user = dao.findById(userId).get();
+		user.setEnabled(flag);
+		dao.save(user);
+	}
+
+	@Override
+	public User getUserInContext() {
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		return findUserByUserName(authentication.getName());
+		return AppDataHolder.getUserInContext();
 	}
 
 }
