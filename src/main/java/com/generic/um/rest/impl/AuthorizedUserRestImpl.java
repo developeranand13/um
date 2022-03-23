@@ -54,7 +54,10 @@ public class AuthorizedUserRestImpl extends GenericRestImpl<User, Integer> imple
 	
 	@GetMapping("/getMessage")
 	public String getMessage(@RequestHeader Map<String,Object> headers){
-		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+//		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+		return "Sample Message";
 	}
+	
+	
 
 }
