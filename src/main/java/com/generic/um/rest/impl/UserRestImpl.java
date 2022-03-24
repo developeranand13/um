@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.generic.core.constants.IGenericConstants;
+import com.generic.core.exception.BusinessException;
 import com.generic.core.logger.GenericLogger;
 import com.generic.core.model.User;
 import com.generic.core.wrapper.UserWrapper;
@@ -74,6 +75,12 @@ public class UserRestImpl  {
 	public String getMessage(@RequestHeader Map<String,Object> headers){
 		logger.info("Inside getMessage");
 		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+	}
+	@GetMapping("/getMessageException")
+	public String getMessageException(@RequestHeader Map<String,Object> headers){
+		logger.info("Inside getMessageException");
+//		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+		throw new BusinessException("Message", "GUI Message");
 	}
 	
 	@PostMapping("/create")
