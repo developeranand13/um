@@ -97,5 +97,15 @@ public class UserRestImpl  {
 		return configUtils.getDecryptedString(key);
 	}
 	
+	@GetMapping("/findByUserName/{userName}")
+	public User findByUserName(@PathVariable("userName") String userName) {
+		return service.findByUserName(userName);
+	}
+	
+	@GetMapping("/findById/{id}")
+	public User findById(@PathVariable("id") Integer id) {
+		return service.findById(id);
+	}
+	
 	
 }

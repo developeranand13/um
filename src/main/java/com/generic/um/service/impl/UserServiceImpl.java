@@ -76,7 +76,8 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	@Override
 	public User insert(User entity) {
 		entity.setPassWord(pwEncoder.encode(entity.getPassWord()));
-		return super.insert(entity);
+		super.insert(entity);
+		return super.findById(entity.getId());
 	}
 
 	@Override
