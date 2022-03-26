@@ -15,6 +15,7 @@ import com.generic.core.constants.IGenericConstants;
 import com.generic.core.exception.BusinessException;
 import com.generic.core.logger.GenericLogger;
 import com.generic.core.model.User;
+import com.generic.core.utils.ConfigUtils;
 import com.generic.core.wrapper.UserWrapper;
 import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
@@ -30,6 +31,9 @@ public class UserRestImpl  {
 	
 	@Autowired
 	IOtpRestConsumer otpRestConsumer;
+	
+	@Autowired
+	ConfigUtils configUtils;
 	
 	
 	@PostMapping("/verifyOTPAndCreateUser/{otp}/{email}")
@@ -86,6 +90,11 @@ public class UserRestImpl  {
 	@PostMapping("/create")
 	public User insert( @RequestBody User entity)  {
 			return service.insert(entity);
+	}
+	
+	@GetMapping("/getConfig/{key}")
+	public String getConfig(@PathVariable("key")String  key) {
+		return configUtils.getDecryptedString(key);
 	}
 	
 	

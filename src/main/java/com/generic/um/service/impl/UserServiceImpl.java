@@ -75,7 +75,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	
 	@Override
 	public User insert(User entity) {
-		entity.setPassword(pwEncoder.encode(entity.getPassword()));
+		entity.setPassWord(pwEncoder.encode(entity.getPassWord()));
 		return super.insert(entity);
 	}
 
@@ -89,8 +89,8 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public UserWrapper isValidUser(User user) {
-		user.setPassword(pwEncoder.encode(user.getPassword()));
-		User userFromDB = dao.isValidUser(user.getUserName(), user.getPassword());
+		user.setPassWord(pwEncoder.encode(user.getPassWord()));
+		User userFromDB = dao.isValidUser(user.getUserName(), user.getPassWord());
 		if (userFromDB != null) {
 			if (Boolean.FALSE.equals(userFromDB.getEnabled())) {
 				throw new BusinessException("User disabled", "User disabled. Please contact administrator");
@@ -107,7 +107,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	public String updatePasswordByOTPVerification(String emailId, String otp, String password) {
 		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(), emailId, otp)) {
 			User user = dao.findUserByUserName(emailId);
-			user.setPassword(pwEncoder.encode(password));
+			user.setPassWord(pwEncoder.encode(password));
 			user.setModificationTime(new Date());
 			dao.save(user);
 		} else {
