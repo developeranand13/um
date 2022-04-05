@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.generic.core.constants.IGenericConstants;
+import com.generic.core.dao.IUserDao;
 import com.generic.core.exception.BusinessException;
 import com.generic.core.model.User;
 import com.generic.core.model.User.UserRole;
@@ -20,7 +21,6 @@ import com.generic.core.service.impl.GenericServiceImpl;
 import com.generic.core.utils.AESEncryptor;
 import com.generic.core.utils.AppDataHolder;
 import com.generic.core.wrapper.UserWrapper;
-import com.generic.um.dao.IUserDao;
 import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
 
@@ -46,6 +46,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	@PostConstruct
 	public void setService() {
 		super.setCrudRepository(dao);
+		super.setJpaExecutor(dao);
 	}
 
 	@Override
