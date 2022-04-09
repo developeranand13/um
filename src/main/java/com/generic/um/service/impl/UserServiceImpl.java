@@ -66,7 +66,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public User findUserByUserNameAndType(String userName, String userType) {
-		return dao.findUserByUserNameAndType(userName, userType);
+		return dao.findUserByUserNameAndType(userName, UserType.valueOf(userType));
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	}
 
 	private void handleGoogleUser(UserWrapper userWrapper) {
-		User user = dao.findUserByUserNameAndType(userWrapper.getUserName(), userWrapper.getUserType());
+		User user = dao.findUserByUserNameAndType(userWrapper.getUserName(), UserType.valueOf(userWrapper.getUserType()));
 		if (user == null) {
 			user = new User();
 			user.setUserType(UserType.GOOGLE);
