@@ -15,7 +15,6 @@ import com.generic.core.constants.IGenericConstants;
 import com.generic.core.model.User;
 import com.generic.core.rest.impl.GenericRestImpl;
 import com.generic.um.rest.IAuthorizedUserRest;
-import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
 
 @RestController
@@ -25,9 +24,7 @@ public class AuthorizedUserRestImpl extends GenericRestImpl<User, Integer> imple
 	@Autowired
 	IUserService service;
 	
-	@Autowired
-	private IOtpRestConsumer otpRestConsumer;
-	
+
 	@PostConstruct
 	public void setService(){
 		super.setService(service);
@@ -54,7 +51,8 @@ public class AuthorizedUserRestImpl extends GenericRestImpl<User, Integer> imple
 	
 	@GetMapping("/getMessage")
 	public String getMessage(@RequestHeader Map<String,Object> headers){
-		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+//		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+		return null;
 	}
 	
 	@GetMapping("/getUserMessage")

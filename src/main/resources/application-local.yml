@@ -1,0 +1,21 @@
+spring:
+  jpa:
+    generate-ddl: 'true'
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    testWhileIdle: 'true'
+    timeBetweenEvictionRunsMillis: '60000'
+    minEvictableIdleTimeMillis: '30000'
+    password: root
+    max-wait: '8000'
+    username: root
+    testOnBorrow: 'true'
+    max-active: '15'
+    url: jdbc:mysql://localhost:3306/colonizer?autoreconnect=true
+    max-idle: '10'
+    validationQuery: SELECT 1
+server:
+  port: '8081'

@@ -16,23 +16,14 @@
 	<properties>
 		<java.version>8</java.version>
 	</properties>
+	<repositories>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/developeranand13/core.git</url>
+		</repository>
+	</repositories>
 	<dependencies>
-		<!--<dependency>
-			<groupId>com.generic</groupId>
-			<artifactId>core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			 <exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.dataformat</groupId>
-					<artifactId>jackson-dataformat-xml</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
-			</exclusions> 
-		</dependency>-->
-		
 		<dependency>
 			<groupId>com.generic</groupId>
 			<artifactId>core</artifactId>

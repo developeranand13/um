@@ -17,7 +17,6 @@ import com.generic.core.logger.GenericLogger;
 import com.generic.core.model.User;
 import com.generic.core.utils.ConfigUtils;
 import com.generic.core.wrapper.UserWrapper;
-import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
 
 @RestController
@@ -29,9 +28,7 @@ public class UserRestImpl  {
 	@Autowired
 	IUserService service;
 	
-	@Autowired
-	IOtpRestConsumer otpRestConsumer;
-	
+
 	@Autowired
 	ConfigUtils configUtils;
 	
@@ -78,7 +75,8 @@ public class UserRestImpl  {
 	@GetMapping("/getMessage")
 	public String getMessage(@RequestHeader Map<String,Object> headers){
 		logger.info("Inside getMessage");
-		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+//		return otpRestConsumer.getMessage(headers.get(IGenericConstants.AUTH_HEADER).toString());
+		return null;
 	}
 	@GetMapping("/getMessageException")
 	public String getMessageException(@RequestHeader Map<String,Object> headers){

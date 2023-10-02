@@ -21,7 +21,6 @@ import com.generic.core.service.impl.GenericServiceImpl;
 import com.generic.core.utils.AESEncryptor;
 import com.generic.core.utils.AppDataHolder;
 import com.generic.core.wrapper.UserWrapper;
-import com.generic.um.restconsumer.IOtpRestConsumer;
 import com.generic.um.service.IUserService;
 
 import ch.qos.logback.classic.Logger;
@@ -40,8 +39,6 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 	@Autowired
 	TokenHelper tokenHelper;
 
-	@Autowired
-	IOtpRestConsumer otpRestConsumer;
 
 	@PostConstruct
 	public void setService() {
@@ -107,14 +104,14 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public String updatePasswordByOTPVerification(String emailId, String otp, String password) {
-		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(), emailId, otp)) {
-			User user = dao.findUserByUserName(emailId);
-			user.setPassWord(pwEncoder.encode(password));
-			user.setModificationTime(new Date());
-			dao.save(user);
-		} else {
-			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
-		}
+//		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(), emailId, otp)) {
+//			User user = dao.findUserByUserName(emailId);
+//			user.setPassWord(pwEncoder.encode(password));
+//			user.setModificationTime(new Date());
+//			dao.save(user);
+//		} else {
+//			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+//		}
 		return SUCCESS_JSON;
 	}
 
@@ -125,11 +122,12 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public User verifyOTPAndCreateUser(User entity, String otp, String email) {
-		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(),email, otp)) {
-			return insert(entity);
-		} else {
-			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
-		}
+//		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(),email, otp)) {
+//			return insert(entity);
+//		} else {
+//			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+//		}
+		return null;
 	}
 
 	private UserWrapper getUserWrapperFromUser(User userFromDB) {
