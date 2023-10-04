@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.generic.notification.service.IOTPService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Autowired
 	TokenHelper tokenHelper;
+
+	@Autowired
+	IOTPService otpService;
 
 
 	@PostConstruct
@@ -104,14 +108,14 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public String updatePasswordByOTPVerification(String emailId, String otp, String password) {
-//		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(), emailId, otp)) {
-//			User user = dao.findUserByUserName(emailId);
-//			user.setPassWord(pwEncoder.encode(password));
-//			user.setModificationTime(new Date());
-//			dao.save(user);
-//		} else {
-//			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
-//		}
+		if (otpService.verifyOtp(emailId, otp)) {
+			User user = dao.findUserByUserName(emailId);
+			user.setPassWord(pwEncoder.encode(password));
+			user.setModificationTime(new Date());
+			dao.save(user);
+		} else {
+			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+		}
 		return SUCCESS_JSON;
 	}
 
@@ -122,12 +126,11 @@ public class UserServiceImpl extends GenericServiceImpl<User, Integer> implement
 
 	@Override
 	public User verifyOTPAndCreateUser(User entity, String otp, String email) {
-//		if (otpRestConsumer.verifyOtp(AppDataHolder.getCsrfToken(),email, otp)) {
-//			return insert(entity);
-//		} else {
-//			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
-//		}
-		return null;
+		if (otpService.verifyOtp(email, otp)) {
+			return insert(entity);
+		} else {
+			throw new BusinessException("OTP Verification failed", "OTP Verification failed");
+		}
 	}
 
 	private UserWrapper getUserWrapperFromUser(User userFromDB) {

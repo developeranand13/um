@@ -14,19 +14,19 @@
 	<name>User-Management</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>8</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<repositories>
 		<repository>
 			<id>github</id>
 			<name>GitHub Packages</name>
-			<url>https://maven.pkg.github.com/developeranand13/core.git</url>
+			<url>https://maven.pkg.github.com/developeranand13/um.git</url>
 		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>com.generic</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>notification</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -44,6 +44,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<classifier>exec</classifier>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
